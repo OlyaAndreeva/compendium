@@ -1,7 +1,8 @@
 class Snake:
-  def __init__(self, canvas):
-      self.coordinates = [(420, 60), (420, 30), (420, 0)]
+  def __init__(self, window, canvas):
+      self.coordinates = [(420, 210), (420, 180), (420, 150), (420, 120), (420, 90), (420, 60), (420, 30), (420, 0)]
       self.squares = []
+      self.window = window
       self.canvas = canvas
       self.direction = "down"
       self.draw()
@@ -47,5 +48,22 @@ class Snake:
     del self.squares[-1]
 
 
-    if y <= 600:
-      self.canvas.after(50, self.next_turn)
+    if self.check_collision():
+        self.game_over()
+    else:
+        self.canvas.after(50, self.next_turn)
+
+  def game_over(self):
+    self.window.destroy()
+
+  def check_collision(self):
+    x, y = self.coordinates[0]
+    if x < 0 or x >= 900 or y < 0 or y >= 600:
+        return True
+        
+    for body_part in self.coordinates[1:]:
+        if (x, y) == body_part:
+            return True
+
+    return False
+        
