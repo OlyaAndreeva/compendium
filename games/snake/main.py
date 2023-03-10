@@ -1,9 +1,10 @@
 from tkinter import Tk, Canvas
 from snake import Snake
+from config import WIDTH, HEIGHT, SQUARE
 
 window = Tk()
 window.title('Snake game')
-canvas = Canvas(window, width=900, height=600, bg='#000000')
+canvas = Canvas(window, width=WIDTH*SQUARE, height=HEIGHT*SQUARE, bg='#000000')
 canvas.pack()
 
 

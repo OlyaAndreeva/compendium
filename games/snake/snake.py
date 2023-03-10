@@ -1,21 +1,21 @@
 from food import Food
+from config import WIDTH, HEIGHT, SQUARE, SPEED
 
 
 class Snake:
     def __init__(self, window, canvas):
-        self.coordinates = [(420, 60), (420, 30), (420, 0)]
+        self.coordinates = [(WIDTH//2*SQUARE, SQUARE*2), (WIDTH//2*SQUARE, SQUARE), (WIDTH//2*SQUARE, 0)]
         self.squares = []
         self.window = window
         self.canvas = canvas
         self.direction = "down"
         self.draw()
-
-        self.food = Food(self.canvas)
+        self.food = Food(self.canvas, self.coordinates)
 
     def draw(self):
         for x, y in self.coordinates:
             square = self.canvas.create_rectangle(
-                x, y, x + 30, y + 30, fill="#99e0ff")
+                x, y, x + SQUARE, y + SQUARE, fill="#99e0ff")
             self.squares.append(square)
 
     def set_direction(self, new_direction):
@@ -36,22 +36,22 @@ class Snake:
         x, y = self.coordinates[0]
 
         if self.direction == "left":
-            x = x - 30
+            x = x - SQUARE
         elif self.direction == "right":
-            x = x + 30
+            x = x + SQUARE
         elif self.direction == "down":
-            y = y + 30
+            y = y + SQUARE
         elif self.direction == "up":
-            y = y - 30
+            y = y - SQUARE
 
         self.coordinates.insert(0, (x, y))
         square = self.canvas.create_rectangle(
-            x, y, x + 30, y + 30, fill="#99e0ff")
+            x, y, x + SQUARE, y + SQUARE, fill="#99e0ff")
         self.squares.insert(0, square)
 
-        if (x, y) ==  self.food.coordinates:
+        if (x, y) == self.food.coordinates:
             self.canvas.delete("food")
-            self.food = Food(self.canvas)
+            self.food = Food(self.canvas, self.coordinates)
         else:
             del self.coordinates[-1]
             self.canvas.delete(self.squares[-1])
@@ -60,14 +60,14 @@ class Snake:
         if self.check_collision():
             self.game_over()
         else:
-            self.canvas.after(50, self.next_turn)
+            self.canvas.after(SPEED, self.next_turn)
 
     def game_over(self):
         self.window.destroy()
 
     def check_collision(self):
         x, y = self.coordinates[0]
-        if x < 0 or x >= 900 or y < 0 or y >= 600:
+        if x < 0 or x >= WIDTH*SQUARE or y < 0 or y >= HEIGHT*SQUARE:
             return True
 
         for body_part in self.coordinates[1:]:
