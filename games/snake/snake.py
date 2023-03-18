@@ -1,4 +1,4 @@
-from food import Food
+from food import Food, get_food, eat_food
 from config import WIDTH, HEIGHT, SQUARE, SPEED
 
 
@@ -10,7 +10,7 @@ class Snake:
         self.canvas = canvas
         self.direction = "down"
         self.draw()
-        self.food = Food(self.canvas, self.coordinates)
+        self.food_list = get_food(self)
 
     def draw(self):
         for x, y in self.coordinates:
@@ -32,7 +32,7 @@ class Snake:
             if self.direction != "up":
                 self.direction = "down"
 
-    def next_turn(self):
+    def move_head(self):
         x, y = self.coordinates[0]
 
         if self.direction == "left":
@@ -49,14 +49,18 @@ class Snake:
             x, y, x + SQUARE, y + SQUARE, fill="#99e0ff")
         self.squares.insert(0, square)
 
-        if (x, y) == self.food.coordinates:
-            self.canvas.delete("food")
-            self.food = Food(self.canvas, self.coordinates)
-        else:
-            del self.coordinates[-1]
-            self.canvas.delete(self.squares[-1])
-            del self.squares[-1]
+    def delete_tail(self):
+        del self.coordinates[-1]
+        self.canvas.delete(self.squares[-1])
+        del self.squares[-1]
 
+
+    def next_turn(self):
+        self.move_head()
+       
+        if not eat_food(self):
+            self.delete_tail()
+            
         if self.check_collision():
             self.game_over()
         else:
