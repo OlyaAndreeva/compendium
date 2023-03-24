@@ -1,12 +1,12 @@
 from tkinter import Tk, Canvas
 from snake import Snake
-from config import WIDTH, HEIGHT, SQUARE
+from config import WIDTH, HEIGHT, SQUARE, center_window
 
 window = Tk()
 window.title('Snake game')
 canvas = Canvas(window, width=WIDTH*SQUARE, height=HEIGHT*SQUARE, bg='#000000')
 canvas.pack()
-
+center_window(window)
 
 my_snake = Snake(window, canvas)
 my_snake.next_turn()
