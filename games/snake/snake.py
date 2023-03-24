@@ -1,3 +1,4 @@
+from tkinter import BooleanVar
 from food import Food
 from config import WIDTH, HEIGHT, SQUARE, SPEED
 
@@ -11,10 +12,13 @@ class Snake:
         self.window = window
         self.canvas = canvas
         self.direction = "down"
+        self.pause = BooleanVar()  # False by default
         self.draw()
         self.food_list = Food.get_food(self)
 
     def next_turn(self):
+        self.is_paused()
+
         self.move_head()
 
         if Food.eat_food(self):
@@ -26,6 +30,14 @@ class Snake:
             self.game_over()
         else:
             self.canvas.after(SPEED, self.next_turn)
+
+    def is_paused(self):
+        if self.pause.get():
+            self.canvas.wait_variable(self.pause)
+
+    def press_space(self):
+
+        self.pause.set(not self.pause.get())
 
     def draw(self):
         for x, y in self.coordinates:

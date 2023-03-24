@@ -15,5 +15,6 @@ window.bind('<Left>', lambda event: my_snake.set_direction('left'))
 window.bind('<Right>', lambda event: my_snake.set_direction('right'))
 window.bind('<Up>', lambda event: my_snake.set_direction('up'))
 window.bind('<Down>', lambda event: my_snake.set_direction('down'))
+window.bind('<space>', lambda event: my_snake.press_space())
 
 window.mainloop()
