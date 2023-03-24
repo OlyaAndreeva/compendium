@@ -1,22 +1,37 @@
-from food import Food, get_food, eat_food
+from food import Food
 from config import WIDTH, HEIGHT, SQUARE, SPEED
 
 
 class Snake:
     def __init__(self, window, canvas):
-        self.coordinates = [(WIDTH//2*SQUARE, SQUARE*2), (WIDTH//2*SQUARE, SQUARE), (WIDTH//2*SQUARE, 0)]
-        self.squares = []
+        self.coordinates = [(WIDTH//2*SQUARE, SQUARE*2),
+                            (WIDTH//2*SQUARE, SQUARE),
+                            (WIDTH//2*SQUARE, 0)]
+        self.ids = []
         self.window = window
         self.canvas = canvas
         self.direction = "down"
         self.draw()
-        self.food_list = get_food(self)
+        self.food_list = Food.get_food(self)
+
+    def next_turn(self):
+        self.move_head()
+
+        if Food.eat_food(self):
+            pass
+        else:
+            self.delete_tail()
+
+        if self.check_collision():
+            self.game_over()
+        else:
+            self.canvas.after(SPEED, self.next_turn)
 
     def draw(self):
         for x, y in self.coordinates:
             square = self.canvas.create_rectangle(
                 x, y, x + SQUARE, y + SQUARE, fill="#99e0ff")
-            self.squares.append(square)
+            self.ids.append(square)
 
     def set_direction(self, new_direction):
         if new_direction == "left":
@@ -47,24 +62,12 @@ class Snake:
         self.coordinates.insert(0, (x, y))
         square = self.canvas.create_rectangle(
             x, y, x + SQUARE, y + SQUARE, fill="#99e0ff")
-        self.squares.insert(0, square)
+        self.ids.insert(0, square)
 
     def delete_tail(self):
         del self.coordinates[-1]
-        self.canvas.delete(self.squares[-1])
-        del self.squares[-1]
-
-
-    def next_turn(self):
-        self.move_head()
-       
-        if not eat_food(self):
-            self.delete_tail()
-            
-        if self.check_collision():
-            self.game_over()
-        else:
-            self.canvas.after(SPEED, self.next_turn)
+        self.canvas.delete(self.ids[-1])
+        del self.ids[-1]
 
     def game_over(self):
         self.window.destroy()
