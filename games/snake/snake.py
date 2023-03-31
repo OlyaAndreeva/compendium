@@ -1,7 +1,7 @@
 from tkinter import BooleanVar
 from food import Food
 from config import WIDTH, HEIGHT, SQUARE, SPEED
-
+from enemy import Enemy
 
 class Snake:
     def __init__(self, window, canvas):
@@ -16,6 +16,9 @@ class Snake:
         self.draw()
         self.food_list = Food.get_food(self)
 
+        self.enemy = Enemy(self)
+
+
     def next_turn(self):
         self.is_paused()
 
@@ -25,6 +28,9 @@ class Snake:
             pass
         else:
             self.delete_tail()
+
+        self.enemy.moves()
+
 
         if self.check_collision():
             self.game_over()
