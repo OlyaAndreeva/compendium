@@ -35,8 +35,6 @@ class Food:
         for index, food in enumerate(snake.food_list):
             if snake.coordinates[0] == food.coordinates:
                 snake.canvas.delete(snake.food_list[index].id)
-                del snake.food_list[index]
-                if len(snake.food_list) == 0:
-                    snake.food_list = Food.get_food(snake)
+                del snake.food_list[index]     
                 return True
         return False

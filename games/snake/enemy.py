@@ -1,5 +1,6 @@
-from config import SQUARE
-
+from config import SQUARE, WIDTH, HEIGHT
+from random import choice, random
+from food import Food
 
 class Enemy:
     def __init__(self, snake):
@@ -7,6 +8,7 @@ class Enemy:
         self.ids = []
         self.canvas = snake.canvas
         self.direction = "right"
+        self.food_list = snake.food_list 
         self.draw()
 
     def draw(self):
@@ -31,9 +33,40 @@ class Enemy:
             x, y, SQUARE + x, SQUARE + y, fill="#ff5040")
         self.ids.insert(0, id)
 
-        del self.coordinates[-1]
-        self.canvas.delete(self.ids[-1])
-        del self.ids[-1]
+        if Food.eat_food(self):
+            pass
+        else:
+            del self.coordinates[-1]
+            self.canvas.delete(self.ids[-1])
+            del self.ids[-1]
 
     def choose_direction(self):
-        return "right"
+        x, y = self.coordinates[0]
+        direction = self.direction
+        directions = {'up', 'down', 'left', 'right'}
+        forbidden = set()
+
+        if direction == 'left':
+            forbidden.add('right')
+        elif direction == 'right':
+            forbidden.add('left')
+        if direction == 'up':
+            forbidden.add('down')
+        elif direction == 'down':
+            forbidden.add('up')
+
+        if x == 0:
+            forbidden.add('left')
+        elif x == (WIDTH - 1) * SQUARE:
+            forbidden.add('right')
+        if y == 0:
+            forbidden.add('up')
+        elif y == (HEIGHT - 1) * SQUARE:
+            forbidden.add('down')
+
+        possible = directions - forbidden
+        if direction in possible:
+            if random() < 0.9:
+                return direction
+
+        return choice(list(possible)) 

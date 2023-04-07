@@ -25,7 +25,9 @@ class Snake:
         self.move_head()
 
         if Food.eat_food(self):
-            pass
+            if len(self.food_list) == 0:
+                self.food_list = Food.get_food(self)
+                self.enemy.food_list = self.food_list
         else:
             self.delete_tail()
 
@@ -97,6 +99,10 @@ class Snake:
 
         for body_part in self.coordinates[1:]:
             if (x, y) == body_part:
+                return True
+        
+        for body_part in self.coordinates:
+            if body_part in self.enemy.coordinates:
                 return True
 
         return False

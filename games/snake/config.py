@@ -2,7 +2,7 @@ WIDTH = 90
 HEIGHT = 60
 SQUARE = 15
 SPEED = 25
-FOOD_NUMBER = 10
+FOOD_NUMBER = 20
 
 def center_window(window):
     window.update()
