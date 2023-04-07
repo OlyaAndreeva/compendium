@@ -3,6 +3,7 @@ from food import Food
 from config import WIDTH, HEIGHT, SQUARE, SPEED
 from enemy import Enemy
 
+
 class Snake:
     def __init__(self, window, canvas):
         self.coordinates = [(WIDTH//2*SQUARE, SQUARE*2),
@@ -18,7 +19,6 @@ class Snake:
 
         self.enemy = Enemy(self)
 
-
     def next_turn(self):
         self.is_paused()
 
@@ -30,7 +30,6 @@ class Snake:
             self.delete_tail()
 
         self.enemy.moves()
-
 
         if self.check_collision():
             self.game_over()
@@ -52,18 +51,19 @@ class Snake:
             self.ids.append(square)
 
     def set_direction(self, new_direction):
-        if new_direction == "left":
-            if self.direction != "right":
-                self.direction = "left"
-        elif new_direction == "right":
-            if self.direction != "left":
-                self.direction = "right"
-        elif new_direction == "up":
-            if self.direction != "down":
-                self.direction = "up"
-        elif new_direction == "down":
-            if self.direction != "up":
-                self.direction = "down"
+        if not self.pause.get():
+            if new_direction == "left":
+                if self.direction != "right":
+                    self.direction = "left"
+            elif new_direction == "right":
+                if self.direction != "left":
+                    self.direction = "right"
+            elif new_direction == "up":
+                if self.direction != "down":
+                    self.direction = "up"
+            elif new_direction == "down":
+                if self.direction != "up":
+                    self.direction = "down"
 
     def move_head(self):
         x, y = self.coordinates[0]
