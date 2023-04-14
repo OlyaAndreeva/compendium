@@ -11,7 +11,7 @@ class Food:
             y = randint(0, HEIGHT-1) * SQUARE
         self.coordinates = (x, y)
         self.id = canvas.create_oval(
-            x, y, x + SQUARE, y + SQUARE, fill="#f0d011", tags="food")
+            x, y, x + SQUARE, y + SQUARE, fill="#3060FF", tags="food")
 
     def __eq__(self, other) -> bool:
         return self.coordinates == other.coordinates
