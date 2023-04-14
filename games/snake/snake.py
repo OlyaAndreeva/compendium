@@ -25,14 +25,16 @@ class Snake:
         self.move_head()
 
         if Food.eat_food(self):
-            if len(self.food_list) == 0:
-                self.food_list = Food.get_food(self)
-                self.enemy.food_list = self.food_list
+            pass
         else:
             self.delete_tail()
 
         self.enemy.moves()
 
+        if len(self.food_list) == 0:
+            self.food_list = Food.get_food(self)
+            self.enemy.food_list = self.food_list
+        
         if self.check_collision():
             self.game_over()
         else:
