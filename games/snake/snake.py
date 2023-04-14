@@ -25,8 +25,15 @@ class Snake:
                                  [((WIDTH - 3 ) * SQUARE, (HEIGHT - 1) * SQUARE), 
                                   ((WIDTH - 2 ) * SQUARE, (HEIGHT - 1) * SQUARE),
                                   ((WIDTH - 1 ) * SQUARE, (HEIGHT - 1) * SQUARE)],
-                                  "#f0d011",
+                                  "#F0D011",
                                   "left")
+        
+        self.score = 0
+        self.canvas.create_text((WIDTH - 1) * SQUARE, SQUARE,
+                                fill = "#FFFFFF",
+                                font =("Old English Text MT", f"{SQUARE}"),
+                                text = f"{self.score}",
+                                tag = "score")
 
     def next_turn(self):
         self.is_paused()
@@ -34,7 +41,8 @@ class Snake:
         self.move_head()
 
         if Food.eat_food(self):
-            pass
+            self.score = self.score + 1
+            self.print_score()
         else:
             self.delete_tail()
 
@@ -50,6 +58,14 @@ class Snake:
             self.game_over()
         else:
             self.canvas.after(SPEED, self.next_turn)
+
+    def print_score(self):
+        self.canvas.delete("score")
+        self.canvas.create_text((WIDTH - 1) * SQUARE, SQUARE,
+                                fill = "#FFFFFF",
+                                font =("Old English Text MT", f"{SQUARE}"),
+                                text = f"{self.score}",
+                                tag = "score")
 
     def is_paused(self):
         if self.pause.get():
