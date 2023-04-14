@@ -22,18 +22,18 @@ class Snake:
                                 "#A0A0A0",
                                 "right")
         self.enemy_right = Enemy(self,
-                                 [((WIDTH - 3 ) * SQUARE, (HEIGHT - 1) * SQUARE), 
-                                  ((WIDTH - 2 ) * SQUARE, (HEIGHT - 1) * SQUARE),
-                                  ((WIDTH - 1 ) * SQUARE, (HEIGHT - 1) * SQUARE)],
-                                  "#F0D011",
-                                  "left")
-        
+                                 [((WIDTH - 3) * SQUARE, (HEIGHT - 1) * SQUARE),
+                                  ((WIDTH - 2) * SQUARE, (HEIGHT - 1) * SQUARE),
+                                  ((WIDTH - 1) * SQUARE, (HEIGHT - 1) * SQUARE)],
+                                 "#F0D011",
+                                 "left")
+
         self.score = 0
         self.canvas.create_text((WIDTH - 1) * SQUARE, SQUARE,
-                                fill = "#FFFFFF",
-                                font =("Old English Text MT", f"{SQUARE}"),
-                                text = f"{self.score}",
-                                tag = "score")
+                                fill="#FFFFFF",
+                                font=("Old English Text MT", f"{SQUARE}"),
+                                text=f"{self.score}",
+                                tag="score")
 
     def next_turn(self):
         self.is_paused()
@@ -50,22 +50,25 @@ class Snake:
         self.enemy_right.moves()
 
         if len(self.food_list) == 0:
-            self.food_list = Food.get_food(self)
-            self.enemy_left.food_list = self.food_list
-            self.enemy_right.food_list = self.food_list
-        
+            self.update_food_lists()
+
         if self.check_collision():
             self.game_over()
         else:
             self.canvas.after(SPEED, self.next_turn)
 
+    def update_food_lists(self):
+        self.food_list = Food.get_food(self)
+        self.enemy_left.food_list = self.food_list
+        self.enemy_right.food_list = self.food_list
+
     def print_score(self):
         self.canvas.delete("score")
         self.canvas.create_text((WIDTH - 1) * SQUARE, SQUARE,
-                                fill = "#FFFFFF",
-                                font =("Old English Text MT", f"{SQUARE}"),
-                                text = f"{self.score}",
-                                tag = "score")
+                                fill="#FFFFFF",
+                                font=("Old English Text MT", f"{SQUARE}"),
+                                text=f"{self.score}",
+                                tag="score")
 
     def is_paused(self):
         if self.pause.get():
@@ -129,7 +132,7 @@ class Snake:
         for body_part in self.coordinates[1:]:
             if (x, y) == body_part:
                 return True
-        
+
         for body_part in self.coordinates:
             if body_part in self.enemy_left.coordinates or body_part in self.enemy_right.coordinates:
                 return True
