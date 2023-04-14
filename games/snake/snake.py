@@ -17,7 +17,16 @@ class Snake:
         self.draw()
         self.food_list = Food.get_food(self)
 
-        self.enemy = Enemy(self)
+        self.enemy_left = Enemy(self,
+                                [(SQUARE * 2, 0), (SQUARE, 0), (0, 0)],
+                                "#A0A0A0",
+                                "right")
+        self.enemy_right = Enemy(self,
+                                 [((WIDTH - 3 ) * SQUARE, (HEIGHT - 1) * SQUARE), 
+                                  ((WIDTH - 2 ) * SQUARE, (HEIGHT - 1) * SQUARE),
+                                  ((WIDTH - 1 ) * SQUARE, (HEIGHT - 1) * SQUARE)],
+                                  "#f0d011",
+                                  "left")
 
     def next_turn(self):
         self.is_paused()
@@ -29,11 +38,13 @@ class Snake:
         else:
             self.delete_tail()
 
-        self.enemy.moves()
+        self.enemy_left.moves()
+        self.enemy_right.moves()
 
         if len(self.food_list) == 0:
             self.food_list = Food.get_food(self)
-            self.enemy.food_list = self.food_list
+            self.enemy_left.food_list = self.food_list
+            self.enemy_right.food_list = self.food_list
         
         if self.check_collision():
             self.game_over()
@@ -104,7 +115,7 @@ class Snake:
                 return True
         
         for body_part in self.coordinates:
-            if body_part in self.enemy.coordinates:
+            if body_part in self.enemy_left.coordinates or body_part in self.enemy_right.coordinates:
                 return True
 
         return False

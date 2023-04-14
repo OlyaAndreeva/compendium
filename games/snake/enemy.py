@@ -2,19 +2,21 @@ from config import SQUARE, WIDTH, HEIGHT
 from random import choice, random
 from food import Food
 
+
 class Enemy:
-    def __init__(self, snake):
-        self.coordinates = [(SQUARE * 2, 0), (SQUARE, 0), (0, 0)]
+    def __init__(self, snake, coordinates, color, direction):
+        self.coordinates = coordinates
         self.ids = []
         self.canvas = snake.canvas
-        self.direction = "right"
-        self.food_list = snake.food_list 
+        self.direction = direction
+        self.food_list = snake.food_list
+        self.color = color
         self.draw()
 
     def draw(self):
         for x, y in self.coordinates:
             id = self.canvas.create_rectangle(
-                x, y, SQUARE + x, SQUARE + y, fill="#ff5040")
+                x, y, SQUARE + x, SQUARE + y, fill=self.color)
             self.ids.append(id)
 
     def moves(self):
@@ -30,7 +32,7 @@ class Enemy:
             x = x - SQUARE
         self.coordinates.insert(0, (x, y))
         id = self.canvas.create_rectangle(
-            x, y, SQUARE + x, SQUARE + y, fill="#ff5040")
+            x, y, SQUARE + x, SQUARE + y, fill=self.color)
         self.ids.insert(0, id)
 
         if Food.eat_food(self):
@@ -69,4 +71,4 @@ class Enemy:
             if random() < 0.9:
                 return direction
 
-        return choice(list(possible)) 
+        return choice(list(possible))
