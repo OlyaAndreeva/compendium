@@ -1,7 +1,8 @@
 from tkinter import BooleanVar
 from food import Food
-from config import WIDTH, HEIGHT, SQUARE, SPEED
+from config import WIDTH, HEIGHT, SQUARE, SPEED, TIME
 from enemy import Enemy
+from time import perf_counter
 
 
 class Snake:
@@ -34,6 +35,13 @@ class Snake:
                                 font=("Old English Text MT", f"{SQUARE}"),
                                 text=f"{self.score}",
                                 tag="score")
+
+        self.refresh_time = perf_counter()
+        self.canvas.create_text(SQUARE + SQUARE//2, SQUARE,
+                                fill="#FFFFFF",
+                                font=("Old English Text MT", f"{SQUARE}"),
+                                text=f"{round(TIME,1)}",
+                                tag="timer")
 
     def next_turn(self):
         self.is_paused()
@@ -71,10 +79,27 @@ class Snake:
         if len(self.food_list) == 0:
             self.update_food_lists()
 
-        if self.check_collision():
+        self.timer()
+
+        if len(self.coordinates) == 0 or self.check_collision():
             self.game_over()
         else:
             self.canvas.after(SPEED, self.next_turn)
+
+    def timer(self):
+        self.canvas.delete("timer")
+        current_timer = round(TIME - (perf_counter() - self.refresh_time), 1)
+
+        if current_timer <= 0:
+            self.delete_tail()
+            current_timer = TIME
+            self.refresh_time = perf_counter()
+            
+        self.canvas.create_text(SQUARE + SQUARE//2, SQUARE,
+                                fill="#FFFFFF",
+                                font=("Old English Text MT", f"{SQUARE}"),
+                                text=f"{round(current_timer,1)}",
+                                tag="timer")
 
     def check_enemy_kill(self, enemy):
         if self.coordinates[0] in enemy.coordinates:
