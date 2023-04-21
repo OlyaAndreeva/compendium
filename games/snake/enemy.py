@@ -72,3 +72,7 @@ class Enemy:
                 return direction
 
         return choice(list(possible))
+
+    def kill(self):
+        for id in self.ids:
+            self.canvas.delete(id)

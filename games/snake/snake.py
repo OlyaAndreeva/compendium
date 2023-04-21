@@ -43,6 +43,25 @@ class Snake:
         if Food.eat_food(self):
             self.score = self.score + 1
             self.print_score()
+        elif self.check_enemy_kill(self.enemy_left):
+            self.score = self.score + len(self.enemy_left.coordinates)
+            self.print_score()
+            self.enemy_left.kill()
+            self.enemy_left = Enemy(self,
+                                    [(SQUARE * 2, 0), (SQUARE, 0), (0, 0)],
+                                    "#A0A0A0",
+                                    "right")
+        elif self.check_enemy_kill(self.enemy_right):
+            self.score = self.score + len(self.enemy_right.coordinates)
+            self.print_score()
+            self.enemy_right.kill()
+            self.enemy_right = Enemy(self,
+                                     [((WIDTH - 3) * SQUARE, (HEIGHT - 1) * SQUARE),
+                                      ((WIDTH - 2) * SQUARE,
+                                       (HEIGHT - 1) * SQUARE),
+                                         ((WIDTH - 1) * SQUARE, (HEIGHT - 1) * SQUARE)],
+                                     "#F0D011",
+                                     "left")
         else:
             self.delete_tail()
 
@@ -56,6 +75,19 @@ class Snake:
             self.game_over()
         else:
             self.canvas.after(SPEED, self.next_turn)
+
+    def check_enemy_kill(self, enemy):
+        if self.coordinates[0] in enemy.coordinates:
+            if self.direction == "left" and enemy.direction != "right":
+                return True
+            if self.direction == "right" and enemy.direction != "left":
+                return True
+            if self.direction == "up" and enemy.direction != "down":
+                return True
+            if self.direction == "down" and enemy.direction != "up":
+                return True
+        else:
+            return False
 
     def update_food_lists(self):
         self.food_list = Food.get_food(self)
