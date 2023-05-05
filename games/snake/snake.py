@@ -3,6 +3,7 @@ from food import Food
 from config import WIDTH, HEIGHT, SQUARE, SPEED, TIME
 from enemy import Enemy
 from time import perf_counter
+from database import db_init, db_check_insert, db_insert, db_get_leaders
 
 
 class Snake:
@@ -179,7 +180,14 @@ class Snake:
         del self.ids[-1]
 
     def game_over(self):
+        db_init()
+        if db_check_insert(self.score):
+            db_insert("shine", self.score)
+        self.print_leaders(db_get_leaders())
         self.window.destroy()
+
+    def print_leaders(self, leaders):
+        print(leaders)
 
     def check_collision(self):
         x, y = self.coordinates[0]
