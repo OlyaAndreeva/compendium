@@ -95,7 +95,7 @@ class Snake:
             self.delete_tail()
             current_timer = TIME
             self.refresh_time = perf_counter()
-            
+
         self.canvas.create_text(SQUARE + SQUARE//2, SQUARE,
                                 fill="#FFFFFF",
                                 font=("Old English Text MT", f"{SQUARE}"),
@@ -184,10 +184,46 @@ class Snake:
         if db_check_insert(self.score):
             db_insert("shine", self.score)
         self.print_leaders(db_get_leaders())
-        self.window.destroy()
+        # self.window.destroy()
 
     def print_leaders(self, leaders):
         print(leaders)
+        self.canvas.delete("all")
+        self.canvas.create_text(WIDTH * SQUARE // 2, SQUARE * 3,
+                                fill="#6A60AA",
+                                font=("Old English Text MT", f"{SQUARE * 3}"),
+                                text="LEADERBOARD:",
+                                tag="results")
+
+        for index, leader in enumerate(leaders):
+            self.canvas.create_text(WIDTH * SQUARE // 2.5, SQUARE * (8 + index * 3),
+                                    fill="#FFFFFF",
+                                    font=("Old English Text MT", f"{SQUARE * 2}"),
+                                    text=f"{leader[1]}",
+                                    tag="results")
+            self.canvas.create_text(WIDTH * SQUARE // 1.5, SQUARE * (8 + index * 3),
+                                    fill="#FFFFFF",
+                                    font=("Old English Text MT", f"{SQUARE * 2}"),
+                                    text=f"{leader[2]}",
+                                    tag="results")
+        
+        self.canvas.create_text(WIDTH * SQUARE // 2, SQUARE * HEIGHT // 2,
+                                fill="#6A60AA",
+                                font=("Old English Text MT", f"{SQUARE * 3}"),
+                                text=f"Your score: {self.score}",
+                                tag="results")
+
+        self.canvas.create_text(WIDTH * SQUARE // 2, SQUARE * (HEIGHT - 8),
+                                fill="#FFFFFF",
+                                font=("Old English Text MT", f"{SQUARE * 2}"),
+                                text="press 'r' to restart",
+                                tag="results")
+        self.canvas.create_text(WIDTH * SQUARE // 2, SQUARE * (HEIGHT - 4),
+                                fill="#FFFFFF",
+                                font=("Old English Text MT", f"{SQUARE * 2}"),
+                                text="press 'q' to quit",
+                                tag="results")
+
 
     def check_collision(self):
         x, y = self.coordinates[0]
