@@ -44,6 +44,8 @@ class Snake:
                                 text=f"{round(TIME,1)}",
                                 tag="timer")
 
+        self.end = False
+
     def next_turn(self):
         self.is_paused()
 
@@ -184,7 +186,7 @@ class Snake:
         if db_check_insert(self.score):
             db_insert("shine", self.score)
         self.print_leaders(db_get_leaders())
-        # self.window.destroy()
+        self.end = True
 
     def print_leaders(self, leaders):
         print(leaders)
