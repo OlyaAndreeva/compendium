@@ -1,4 +1,4 @@
-from tkinter import BooleanVar
+from tkinter import BooleanVar, Toplevel, Label, Entry, Button
 from food import Food
 from config import WIDTH, HEIGHT, SQUARE, SPEED, TIME
 from enemy import Enemy
@@ -15,9 +15,10 @@ class Snake:
         self.window = window
         self.canvas = canvas
         self.direction = "down"
-        self.pause = BooleanVar()  # False by default
+        self.pause = BooleanVar()  # False by default       #DEPRESSED :_(
         self.draw()
         self.food_list = Food.get_food(self)
+    
 
         self.enemy_left = Enemy(self,
                                 [(SQUARE * 2, 0), (SQUARE, 0), (0, 0)],
@@ -45,6 +46,8 @@ class Snake:
                                 tag="timer")
 
         self.end = False
+        self.username = ""
+        self.name_typed = BooleanVar()
 
     def next_turn(self):
         self.is_paused()
@@ -184,9 +187,50 @@ class Snake:
     def game_over(self):
         db_init()
         if db_check_insert(self.score):
-            db_insert("shine", self.score)
+            self.read_name()
+            self.canvas.wait_variable(self.name_typed)
+            db_insert(self.username, self.score)
         self.print_leaders(db_get_leaders())
         self.end = True
+
+    def read_name(self):
+        top = Toplevel()
+        top.title("name")
+        top.resizable(False, False)
+        top.protocol("WM_DELETE_WINDOW", self.delete_window)
+
+        label = Label(top,
+                      background="black",
+                      foreground="white",
+                      font=("Old English Text MT", f"{int(SQUARE * 0.9)}"),
+                      text="type your name:")
+        label.pack(side="left")
+
+        entry = Entry(top,
+                      background="black",
+                      foreground="white",
+                      font=("Old English Text MT", f"{SQUARE}"),
+                      insertbackground="white")
+        entry.pack(side="left")
+        entry.focus_set()
+
+        button = Button(top,
+                        background="black",
+                        foreground="white",
+                        font=("Old English Text MT", f"{int(SQUARE * 0.7)}"),
+                        text="submit",
+                        command=lambda: self.submit(top, entry))
+        button.pack(side="right")
+
+    def delete_window(self):
+        pass
+    
+    def submit(self, top, entry):
+        self.username = entry.get()
+        if self.username != "":
+            top.destroy()
+            self.name_typed.set(not self.name_typed.get())
+
 
     def print_leaders(self, leaders):
         print(leaders)
