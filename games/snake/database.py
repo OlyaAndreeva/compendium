@@ -1,8 +1,11 @@
 from sqlite3 import connect
+from pathlib import Path
+
+path = str(Path(__file__).parent) + "\snake.db"
 
 
 def db_init():
-    with connect('C:\myprojects\compendium\games\snake\snake.db') as connection:
+    with connect(path) as connection:
         cursor = connection.cursor()
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS results(
@@ -32,7 +35,7 @@ def db_check_insert(score):
 
 
 def db_get_leaders():
-    with connect('C:\myprojects\compendium\games\snake\snake.db') as connection:
+    with connect(path) as connection:
         cursor = connection.cursor()
         cursor.execute("""
         SELECT * FROM results
@@ -42,12 +45,10 @@ def db_get_leaders():
         return cursor.fetchall()
     
 def db_insert(name, score):
-    with connect('C:\myprojects\compendium\games\snake\snake.db') as connection:
+    with connect(path) as connection:
         cursor = connection.cursor()
         cursor.execute(f"""
         INSERT INTO results(name, score) VALUES ("{name}", {score})
         """)
 
-# db_init()
-# print(db_check_insert(1))
-
+# i'm so sad :(
